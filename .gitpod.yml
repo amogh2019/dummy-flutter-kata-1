@@ -64,7 +64,7 @@ tasks:
         done
       } fi
       flutter pub get
-      flutter run -d chrome
+      flutter run -d "chrome"
 
 
 
