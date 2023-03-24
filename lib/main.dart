@@ -36,9 +36,16 @@ class MyHomePage extends StatelessWidget {
 
     return Scaffold(
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text('A random idea:'),
-          Text(appState.current.asLowerCase),
+          Container(
+            color: Colors.amber[400],
+            child: Text('A random idea:'),
+          ),
+          Container(
+            color: Colors.red[300],
+            child: Text(appState.current.asLowerCase),
+          ),
         ],
       ),
     );
