@@ -44,6 +44,22 @@ class MyAppState extends ChangeNotifier {
     current = WordPair.random();
     notifyListeners();
   }
+
+  // var favouriteWords = <WordPair>[];// for list implementation of the collection
+  var favouriteWords = <WordPair>{}; // for set implementation of the collection
+
+  void flipFavourite() {
+    if (isCurrentMarkedFavourite()) {
+      favouriteWords.remove(current);
+    } else {
+      favouriteWords.add(current);
+    }
+    notifyListeners();
+  }
+
+  bool isCurrentMarkedFavourite() {
+    return favouriteWords.contains(current);
+  }
 }
 
 class MyHomePage extends StatelessWidget {
@@ -54,6 +70,10 @@ class MyHomePage extends StatelessWidget {
     var currentRandomPreposition = appState.randomPreposition;
 
     var theme = Theme.of(context);
+
+    IconData currentFavIcon = appState.isCurrentMarkedFavourite()
+        ? Icons.favorite_outlined
+        : Icons.favorite_border_outlined;
 
     return Scaffold(
       body: Center(
@@ -77,15 +97,28 @@ class MyHomePage extends StatelessWidget {
             SizedBox(
               height: 10, //just added to create visual gap
             ),
-            ElevatedButton(
-                // onPressed: () {
-                //   print('this button is pressed!');
-                // },
-                // onPressed: appState.getNextRandomWord,
-                onPressed: () {
-                  appState.getNextRandomWord();
-                },
-                child: Text('Next??'))
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: appState.flipFavourite,
+                  icon: Icon(currentFavIcon),
+                  label: Text('Favourite'),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                ElevatedButton(
+                    // onPressed: () {
+                    //   print('this button is pressed!');
+                    // },
+                    // onPressed: appState.getNextRandomWord,
+                    onPressed: () {
+                      appState.getNextRandomWord();
+                    },
+                    child: Text('Next??')),
+              ],
+            )
           ],
         ),
       ),
