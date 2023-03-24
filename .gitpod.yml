@@ -63,7 +63,7 @@ tasks:
           sleep 0.5
         done
       } fi
-      flutter run
+      flutter run -d chrome
 
 
   - name: deal with the dependencies and resolve
