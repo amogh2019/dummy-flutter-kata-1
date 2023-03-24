@@ -63,12 +63,10 @@ tasks:
           sleep 0.5
         done
       } fi
+      flutter pub get
       flutter run -d chrome
 
 
-  - name: deal with the dependencies and resolve
-    init: |
-      flutter pub get
 
 ports:
   - port: 5900
