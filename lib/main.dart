@@ -62,37 +62,79 @@ class MyAppState extends ChangeNotifier {
   }
 }
 
-class MyHomePage extends StatelessWidget {
+// another way to provite a state/variablestorage to widgets.
+// this creates a state for this MyHomePage widget only
+// this also create a new private class _MyHomePageState widget (_ means private in dart)
+// by creating this // state change method setState will be accessable
+class MyHomePage extends StatefulWidget {
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+// private state class for MyHomePage widget
+// it has both the UI/Widgets and variables+methodToChangeVariables(GetterSetters)
+// this is only accessable here and not in its child??? //TODO??
+// setState is like notifyListeners in stateless app's shared state, to let ui render the new changes
+// (unlike a stateless widget, where an nameIndependent state class is created
+// and is accessed by all child elements via the changenotifier's notifylisteners)
+class _MyHomePageState extends State<MyHomePage> {
+  // variables tracked in state
+  var selectedIndex = 0;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Row(
-        children: [
-          SafeArea(
-            child: NavigationRail(
-              destinations: [
-                NavigationRailDestination(
-                  icon: Icon(Icons.home),
-                  label: Text('Home'),
-                ),
-                NavigationRailDestination(
-                  icon: Icon(Icons.favorite),
-                  label: Text('Favourites'),
-                ),
-              ],
-              selectedIndex: 0,
-              extended: false,
+    // some helper code to generate ui elements for this widget
+    Widget page;
+    switch (selectedIndex) {
+      case 0:
+        page = RandomWordGeneratorPage();
+        break;
+      case 1:
+        page =
+            Placeholder(); // used while development // draws a rect with cross on place intended to be filled with a meaningful widget later
+        //page = SelectedFavoutitesPage();
+        break;
+      default:
+        //Applying the fail-fast principle, the switch statement also makes sure to throw an error if selectedIndex is neither 0 or 1. This helps prevent bugs down the line. If you ever add a new destination to the navigation rail and forget to update this code, the program crashes in development (as opposed to letting you guess why things don't work, or letting you publish a buggy code into production).
+        throw UnimplementedError('no widget for $selectedIndex');
+    }
+
+    // wrapping with layout builder here to find out screen constraints and space available to this widget
+    return LayoutBuilder(builder: (context, constraints) {
+      return Scaffold(
+        body: Row(
+          children: [
+            SafeArea(
+              child: NavigationRail(
+                destinations: [
+                  NavigationRailDestination(
+                    icon: Icon(Icons.home),
+                    label: Text('Home'),
+                  ),
+                  NavigationRailDestination(
+                    icon: Icon(Icons.favorite),
+                    label: Text('Favourites'),
+                  ),
+                ],
+                selectedIndex: selectedIndex,
+                extended: constraints.maxWidth >= 400,
+                onDestinationSelected: (value) {
+                  setState(() {
+                    selectedIndex = value;
+                  });
+                },
+              ),
             ),
-          ),
-          Expanded(
-            child: Container(
-              color: Theme.of(context).colorScheme.primaryContainer,
-              child: RandomWordGeneratorPage(),
-            ),
-          )
-        ],
-      ),
-    );
+            Expanded(
+              child: Container(
+                color: Theme.of(context).colorScheme.primaryContainer,
+                child: page,
+              ),
+            )
+          ],
+        ),
+      );
+    });
   }
 }
 
