@@ -65,6 +65,40 @@ class MyAppState extends ChangeNotifier {
 class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      body: Row(
+        children: [
+          SafeArea(
+            child: NavigationRail(
+              destinations: [
+                NavigationRailDestination(
+                  icon: Icon(Icons.home),
+                  label: Text('Home'),
+                ),
+                NavigationRailDestination(
+                  icon: Icon(Icons.favorite),
+                  label: Text('Favourites'),
+                ),
+              ],
+              selectedIndex: 0,
+              extended: false,
+            ),
+          ),
+          Expanded(
+            child: Container(
+              color: Theme.of(context).colorScheme.primaryContainer,
+              child: RandomWordGeneratorPage(),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class RandomWordGeneratorPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
     var currentRandomWord = appState.current;
     var currentRandomPreposition = appState.randomPreposition;
@@ -75,52 +109,50 @@ class MyHomePage extends StatelessWidget {
         ? Icons.favorite_outlined
         : Icons.favorite_border_outlined;
 
-    return Scaffold(
-      body: Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              // color: Colors.amber[400],
-              color: theme.colorScheme.background,
-              child: Text(
-                  'A random : ${appState.randomWordTwo} ${currentRandomPreposition}'),
-            ),
-            SizedBox(
-              height: 10, //just added to create visual gap
-            ),
-            Container(
-              color: theme.colorScheme.surface,
-              child: BigCard(currentRandomWord: currentRandomWord),
-            ),
-            SizedBox(
-              height: 10, //just added to create visual gap
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton.icon(
-                  onPressed: appState.flipFavourite,
-                  icon: Icon(currentFavIcon),
-                  label: Text('Favourite'),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                ElevatedButton(
-                    // onPressed: () {
-                    //   print('this button is pressed!');
-                    // },
-                    // onPressed: appState.getNextRandomWord,
-                    onPressed: () {
-                      appState.getNextRandomWord();
-                    },
-                    child: Text('Next??')),
-              ],
-            )
-          ],
-        ),
+    return Center(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            // color: Colors.amber[400],
+            color: theme.colorScheme.primaryContainer,
+            child: Text(
+                'A random : ${appState.randomWordTwo} ${currentRandomPreposition}'),
+          ),
+          SizedBox(
+            height: 10, //just added to create visual gap
+          ),
+          Container(
+            // color: theme.colorScheme.surface,
+            color: theme.colorScheme.primaryContainer,
+            child: BigCard(currentRandomWord: currentRandomWord),
+          ),
+          SizedBox(
+            height: 10, //just added to create visual gap
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton.icon(
+                onPressed: appState.flipFavourite,
+                icon: Icon(currentFavIcon),
+                label: Text('Favourite'),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              ElevatedButton(
+                  // onPressed: () {
+                  //   print('this button is pressed!');
+                  // },
+                  onPressed: () {
+                    appState.getNextRandomWord();
+                  },
+                  child: Text('Next??')),
+            ],
+          )
+        ],
       ),
     );
   }
