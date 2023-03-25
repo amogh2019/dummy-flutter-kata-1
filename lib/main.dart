@@ -90,9 +90,8 @@ class _MyHomePageState extends State<MyHomePage> {
         page = RandomWordGeneratorPage();
         break;
       case 1:
-        page =
-            Placeholder(); // used while development // draws a rect with cross on place intended to be filled with a meaningful widget later
-        //page = SelectedFavoutitesPage();
+        // page = Placeholder(); // used while development // draws a rect with cross on place intended to be filled with a meaningful widget later
+        page = SelectedFavoutitesPage();
         break;
       default:
         //Applying the fail-fast principle, the switch statement also makes sure to throw an error if selectedIndex is neither 0 or 1. This helps prevent bugs down the line. If you ever add a new destination to the navigation rail and forget to update this code, the program crashes in development (as opposed to letting you guess why things don't work, or letting you publish a buggy code into production).
@@ -135,6 +134,35 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       );
     });
+  }
+}
+
+class SelectedFavoutitesPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    var appState = context.watch<MyAppState>();
+
+    if (appState.favouriteWords.isEmpty) {
+      return Center(
+        child: Text('No favourites words yet!'),
+      );
+    }
+
+    return Center(
+      child: ListView(children: [
+        Padding(
+          padding: EdgeInsets.all(7),
+          child: Text(
+            'You have ${appState.favouriteWords.length} favourite words so far!',
+          ),
+        ),
+        for (var favWord in appState.favouriteWords)
+          ListTile(
+            leading: Icon(Icons.local_florist),
+            title: Text(favWord.asSnakeCase),
+          ),
+      ]),
+    );
   }
 }
 
